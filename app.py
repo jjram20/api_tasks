@@ -1,13 +1,19 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 from utils.db import db
+import os
+
+if os.getenv('FLASK_ENV') == 'production':
+    load_dotenv('.env.production')
+else:
+    load_dotenv()
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///project.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'secret_key'
+app.config['JWT_SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 db.init_app(app)
 
